@@ -1,1 +1,35 @@
+<!-- I hate writing forms  -->
+<h1><%= @post.title %></h1>
+<h2><%= @post.content %></h2>
+<h3>Categories:</h3>
+<ul>
+  <% @post.categories.each do |category| %>
+    <li><%= category.name %></li>
+  <% end %>
+</ul>
+<h3>Comments:</h3>
+<ul>
+  <% @post.grouped_comments.each do |username, comments| %>
+    <li><%= link_to username, user_path(comments.first.user) %> says:
+      <ul>
+        <% comments.each do |comment| %>
+          <li><%= comment.content %></li>
+        <% end %>
+      </ul>
+  <% end %>
+</ul>
 
+<%= form_for @comment do |f| %>
+  <%= f.label :create_new_comment %><br>
+  <%= f.text_area :content %><br>
+
+  <%= f.label :user %>
+  <%= f.collection_select :user_id, User.all, :id, :username, include_blank: true %><br>
+
+  <%= f.fields_for :user, User.new do |user_fields| %>
+    Create new user: <%= user_fields.text_field :username %><br>
+  <% end %>
+  <%= f.text_area :post_id, value: @post.id, hidden: true %>
+
+  <%= f.submit %>
+<% end %>

@@ -1,6 +1,8 @@
 class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
+    #need to create a instantiate a new comment here
+    @comment = Comment.new
   end
 
   def index
